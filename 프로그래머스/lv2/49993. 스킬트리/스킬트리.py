@@ -12,7 +12,6 @@ def solution(skill, skill_trees):
         if len(set(tree) & set(tmp)):
             continue
         else:
-            print(tree)
             answer += 1
         
     return answer
