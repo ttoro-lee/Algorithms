@@ -1,27 +1,15 @@
-from collections import deque
-
 def solution(routes):
-    answer = 0
     
-    routes.sort(key=lambda x:x[0])
+    routes = sorted(routes, key=lambda x: x[1])
+    last_camera = -30001 # 끝나는 시점
     
     print(routes)
 
-    routes = deque(routes)
-    
-    cur = routes[0][1]
-    
-    while(routes):
-        
-        start, end = routes.popleft()
-        
-        if cur >= start and cur <= end:
-            continue
-        elif cur > start: #포함되지 않는데 현재가 크다면
-            cur = end
-        elif cur < start:
-            cur = end
-            answer += 1
-            
-    answer += 1
+    answer = 0
+
+    for route in routes:
+        if last_camera < route[0]: # 이전 마지막 카메라가 지금을 포함할 수 있으면 넘어감
+            answer += 1 # 없으면 카메라 업데이트
+            last_camera = route[1]
+
     return answer
