@@ -1,30 +1,34 @@
-import math
+from collections import deque
 
 def solution(n, stations, w):
     answer = 0
-    
-    gaps = []
-    new_s = [1]
+
+    visited = set(stations)
     
     for s in stations:
-        new_s.append(max(s-w, 1))
-        new_s.append(min(s+w, n))
+        if s-w > 0 and s-w < (n+1):
+            visited.add(s-w)
+        if s+w > 0 and s+w < (n+1):
+            visited.add(s+w)
     
-    new_s += [n+1]
+    stations = deque(stations)
     
-    for i in range(0,len(new_s),2):
-        if i == 0:
-            gaps.append(new_s[i+1] - new_s[i])
-        elif i == len(new_s)-1:
-            gaps.append(new_s[i+1] - new_s[i])
-        else:
-            gaps.append(new_s[i+1] - new_s[i] - 1)
+    while(stations):
+    
+        cur = stations.popleft()
         
+        for idx in [-2*w-1, -w-1, 2*w+1, w+1]:
+            nx = cur + idx
+            
+            if inbox(n, nx) and nx not in visited:
+                
+                answer += 1
+                visited.update(range(nx, nx+w+1))
+                visited.update(range(nx-w, nx))
+                stations.append(nx)
 
-    for g in gaps:
-        if g % (2*w + 1) == 0:
-            answer += g // (2*w + 1)
-        else:
-            answer += math.ceil(g / (2*w + 1))
-        
     return answer
+
+def inbox(n, x):
+    
+    return x > 0 and x < n+1
