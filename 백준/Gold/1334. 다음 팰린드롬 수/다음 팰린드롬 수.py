@@ -1,32 +1,67 @@
-n=input()
-if len(n)==1:
-    n=int(n)
-    if n==9:
-        print(11)
-    else:
-        print(n+1)
-elif len(n)&1:
-    a=int(n[:len(n)//2][::-1])
-    b=int(n[len(n)//2+1:])
-    if a>b:
-        print(n[:len(n)//2]+n[len(n)//2]+n[:len(n)//2][::-1])
-    else:
-        if int(n[len(n)//2])==9:
-            c=str(int(n[:len(n)//2])+1)
-            if len(c)==len(n[:len(n)//2]):
-                print(c+"0"+c[::-1])
-            elif len(c)>len(n[:len(n)//2]):
-                print(c+c[::-1])
+n = input()
+
+
+def solution(n):
+
+    answer = ''
+
+    # 중앙을 기준으로 앞을 자른 수 A, 뒤집은 수 A'
+    # 뒤를 자른 수 B, 뒤집은 수 B'
+
+    length = len(n)
+
+    mid = length // 2
+
+    if length == 1:
+        C = int(n) + 1
+        if C < 10:
+            answer = str(C)
         else:
-            print(n[:len(n)//2]+str(int(n[len(n)//2])+1)+n[:len(n)//2][::-1])
-else:
-    a=int(n[:len(n)//2][::-1])
-    b=int(n[len(n)//2:])
-    if a>b:
-        print(n[:len(n)//2]+n[:len(n)//2][::-1])
+            answer = '11'
+
+    elif length % 2 == 0:
+        # 길이가 짝수인 경우
+        # A' <= B 이면, A에 +1 값이 C일떄
+        # CC' 가 정답
+        r_A = n[:mid][::-1]
+        A = n[:mid]
+        B = n[mid:]
+
+        if int(r_A) <= int(B):
+            C = str(int(A) + 1)
+
+            if len(A) != len(C):
+                # 자리수가 변한다면
+                answer = C + C[::-1][1:]
+            else:
+                answer = C + C[::-1]
+        # A' > B
+        else:
+            answer = A + A[::-1]
     else:
-        c=str(int(n[:len(n)//2])+1)
-        if len(c)==len(n[:len(n)//2]):
-            print(c+c[::-1])
-        elif len(c)>len(n[:len(n)//2]):
-            print(c+c[::-1][1:])
+        # 홀수인 경우
+        m = n[mid]
+        r_A = n[:mid][::-1]
+        A = n[:mid]
+        B = n[mid+1:]
+
+        if int(r_A) <= int(B):
+
+            C = str(int(m) + 1)
+
+            if C == '10':
+                n_A = str(int(A) + 1)
+                if len(n_A) == len(A):
+                    answer = n_A + '0' + n_A[::-1]
+                else:
+                    answer = n_A + n_A[::-1]
+            else:
+                answer = A + C + A[::-1]
+        # A' > B
+        else:
+            answer = A + m + A[::-1]
+
+    return answer
+
+
+print(solution(n))
